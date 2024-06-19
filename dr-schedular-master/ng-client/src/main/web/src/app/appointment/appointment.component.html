@@ -1,0 +1,134 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="well-block">
+            <div class="well-title">
+                <h3>Prenez rendez-vous</h3>
+            </div>
+            <div *ngIf="popupResult" class="alert alert-success" role="alert">
+                    {{popupMessage}}
+            </div> 
+            <div *ngIf="popupResult == false" class="alert alert-danger" role="alert">
+                    {{popupMessage}}
+            </div>
+            <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && sendAppointment()" novalidate class="feedback-form">
+                <br>
+                <!-- Form start -->
+                <div class="row ">
+                    <!-- Patient Name -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                                <label class="control-label" for="email">Nom patient</label>
+                                <!-- Full name -->
+                                <input type="text" 
+                                            id="name" 
+                                            class="fadeIn second form-control input-md"
+                                            name="name"
+                                            placeholder="Nom complet"
+                                            [(ngModel)]="availabilityData.name" 
+                                            #name="ngModel"
+                                            [ngClass]="{ 'is-invalid': f.submitted && name.invalid }"
+                                            minlength="5"
+                                            required>
+    
+                                            <!-- input validation group -->
+                                            
+                                            <div *ngIf="f.submitted && name.invalid" class="invalid-input">
+                                                <!-- individual validation errors -->
+                                                <!-- <div *ngIf="name.errors?.required" style="color: red">Champ obligatoire</div> -->
+                                                <div *ngIf="name.errors?.minlength" class="text-danger">Minimum 5 caractères</div>
+                                                <small  *ngIf="name.errors?.required" class="text-danger">Champ obligatoire</small>
+                                            </div>
+    
+                        </div>
+                    </div>
+                        <!-- Email -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                                <label class="control-label" for="email">Email</label>
+                                <input type="text"
+                                                id="email"
+                                                class="fadeIn second form-control input-md"
+                                                name="email"
+                                                placeholder="Email"
+                                                [(ngModel)]="availabilityData.email"
+                                                #email="ngModel"
+                                                [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
+                                                required email/>
+                                        <!-- input validation group -->
+                                        <div *ngIf="f.submitted && email.invalid" class="invalid-input">
+                                            <!-- individual validation errors -->
+                                            <small  *ngIf="email.errors?.required" class="text-danger">Champ obligatoire</small>
+                                            <small  *ngIf="email.errors?.email" class="text-danger">Le champ n'est pas un email valide</small>
+                                        </div>
+                        </div>
+                    </div>
+                    <!-- Select Doctor -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label" for="appointmentfor">Medecin</label>
+                            <select id="medecin" 
+                                    name="medecin" 
+                                    class="form-control" 
+                                    [(ngModel)]="availabilityData.medecinId"
+                                    #medecin="ngModel"
+                                    (change)="toDay(availabilityData.medecinId)"
+                                    required aria-required="true"
+                                    >
+                                    <option selected disabled>Merci de choisir un medecin</option>
+                                    <option *ngFor="let medecin of medecins" [value]=medecin.id>Dr. {{medecin.fullName}}</option>
+                            </select>
+
+                            <div *ngIf="f.submitted && medecin.touched && medecin.invalid" class="invalid-input">
+                                    <div *ngIf="date.errors?.required" style="color: red">Champ obligatoire</div>
+                                    <!-- <div *ngIf="date.errors?.minlength" style="color: red">Champ obligatoire</div> -->
+                            </div>
+
+                            <!-- input validation group -->
+                            <small class="text-danger" [class.d-none]="f.submitted || (medecin.valid || medecin.touched)">Merci de choisir un medecin</small>
+                        </div>
+                    </div>
+                    <!-- Text input-->
+                            
+                    <div class="col-md-12 text-center">
+                            <label class="control-label" for="date">Date souhaitée</label>
+
+                            <div class="input-group d-flex justify-content-center">
+                                    <span class="input-group-btn">
+                                          <button type="button" class="btn btn-light" (click)="previousDate(availabilityRequest.date)"><i class="fas fa-chevron-left fa-2x"></i></button>
+                                    </span>
+                                    <h1>{{ availabilityRequest.date }}</h1>
+                                    <span class="input-group-btn">
+                                          <button type="button" class="btn btn-light" (click)="nextDay(availabilityRequest.date)"><i class="fas fa-chevron-right fa-2x"></i></button>
+                                    </span>
+                            </div>
+
+                    </div>
+
+                </div>
+                <br><hr>
+                <!-- Button -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <!-- <button id="singlebutton" name="singlebutton" class="btn btn-default">Make An Appointment</button> -->
+                        <button type="submit" class="btn btn-lg btn btn-outline-info btn-block">Prendre rendez-vous →</button>
+                        
+                    </div>
+                </div>
+            </form>
+            <!-- form end -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="well-block">
+            <h4>List de disponibilité pour : {{ availabilityRequest.date }}</h4>
+                <div class="col-md-12">
+                        <div *ngFor="let availability of availabilities">
+                                <div class="inputGroup" >
+                                        <input type="radio" name="radio" id="radio{{availability.id}}" [(ngModel)]="availabilityData.shiftTimeId"  value={{availability.id}} [disabled]="availability.available ===false" required/>
+                                        <label for="radio{{availability.id}}" [class.strikethrough]="availability.available ===false">{{availability.shiftHoraire}} {{(availability.available===false)? '(Réservé)':''}}</label>
+                                </div>
+                        </div>
+                </div>
+        </div>
+    </div>
+</div>

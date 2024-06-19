@@ -1,0 +1,42 @@
+# Public : Add new appointment
+POST {{host-url}}/public/appointment/save
+Content-Type: application/json
+
+{
+    "name": "Amine"
+  , "email": "amine@gmail.com"
+  , "date" : "2019-01-10"
+  , "shiftTimeId": 3
+  , "medecinId": 1
+  , "isValide": false
+}
+###
+
+
+# Public :  Send FEEDBACK
+
+POST {{host-url}}//mailing/feedback
+Content-Type: application/json
+
+{
+  "name": "Imad",
+  "email": "alilat.imad@gmail.com",
+  "feedback": "Your app is so cool"
+}
+###
+
+# Public :  Get list of all medecin
+
+GET {{host-url}}//public/medecin
+
+###
+
+# Public :  Get Public appointment list by day.
+POST {{host-url}}/public/availability
+Content-Type: application/json
+
+{
+  "medecinId": 1,
+  "date": "2019-03-25"
+}
+###
